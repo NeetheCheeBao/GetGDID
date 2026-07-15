@@ -19,8 +19,6 @@
 
 ## ⚙️ 原理说明
 
-从当前用户注册表读取 Microsoft 账户设备身份中的 LID，再将十六进制值转换为十进制 GDID 格式。
-
 * **路径**：`HKEY_CURRENT_USER\SOFTWARE\Microsoft\IdentityCRL\ExtendedProperties`
 * **值名**：`LID`
 
