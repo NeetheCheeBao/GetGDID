@@ -24,6 +24,16 @@
 * **路径**：`HKEY_CURRENT_USER\SOFTWARE\Microsoft\IdentityCRL\ExtendedProperties`
 * **值名**：`LID`
 
+## 🛠️ 本地编译
+
+```bash
+.\build.bat
+```
+或
+```python
+pyinstaller -F -w -n GetGDID main.py
+```
+
 ## ⬇️ 下载使用
 
 前往 [Releases](https://github.com/NeetheCheeBao/GetGDID/releases) 页面下载
