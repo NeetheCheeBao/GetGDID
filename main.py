@@ -179,12 +179,13 @@ class App(object):
         self.refresh()
 
     def _set_window_icon(self):
-        self._github_img = load_photoimage()
-        if self._github_img is not None:
+        ico = resource_path("icon.ico")
+        if os.path.isfile(ico):
             try:
-                self.root.iconphoto(True, self._github_img)
+                self.root.iconbitmap(ico)
             except Exception:
                 pass
+        self._github_img = load_photoimage()
 
     def _center(self):
         self.root.update_idletasks()

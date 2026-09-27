@@ -46,7 +46,7 @@ python -c "import PyInstaller" >nul 2>&1
 if errorlevel 1 goto :fail
 
 call :progress "Compiling main.py to executable..."
-pyinstaller -F -w -n %NAME% main.py >nul 2>&1
+pyinstaller -F -w -n %NAME% --icon=icon.ico --add-data "icon.ico;." --add-data "icon0.png;." main.py >nul 2>&1
 if errorlevel 1 goto :fail
 
 call :progress "Cleaning temporary build files..."
