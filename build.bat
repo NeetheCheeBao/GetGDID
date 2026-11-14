@@ -2,64 +2,44 @@
 setlocal EnableExtensions EnableDelayedExpansion
 cd /d "%~dp0"
 
-where pyinstaller >nul 2>&1
+where cargo >nul 2>&1
 if errorlevel 1 (
-  echo ERROR: pyinstaller not found on PATH.
-  echo Install PyInstaller with 'pip install pyinstaller', or check your Environment Variables.
+  echo ERROR: cargo not found on PATH.
+  echo Install Rust and add cargo to PATH, or check your Environment Variables.
   echo.
   pause
   exit /b 1
 )
 
-where python >nul 2>&1
-if errorlevel 1 (
-  echo ERROR: python not found on PATH.
-  echo Install Python and add it to PATH.
+if not exist Cargo.toml (
+  echo ERROR: Cargo.toml not found in current directory.
   echo.
   pause
   exit /b 1
 )
 
-if not exist main.py (
-  echo ERROR: main.py not found in current directory.
-  echo.
-  pause
-  exit /b 1
-)
-
-set "NAME=GetGDID"
-set "EXE_OUT=dist\%NAME%.exe"
-set "BAR_WIDTH=30"
-set /a TOTAL_STEPS=5
-set /a CURRENT_STEP=0
+set "OUTDIR=dist"
 
 cls
 
-call :progress "Cleaning build artifacts..."
-if exist dist rmdir /s /q dist >nul 2>&1
-if exist build rmdir /s /q build >nul 2>&1
-if exist "%NAME%.spec" del /f /q "%NAME%.spec" >nul 2>&1
-mkdir dist 2>nul
+if exist "%OUTDIR%" rmdir /s /q "%OUTDIR%" >nul 2>&1
+mkdir "%OUTDIR%" 2>nul
 
-call :progress "Analyzing dependencies..."
-python -c "import PyInstaller" >nul 2>&1
+cargo build --release
 if errorlevel 1 goto :fail
 
-call :progress "Compiling main.py to executable..."
-pyinstaller -F -w -n %NAME% --icon=icon.ico --add-data "icon.ico;." --add-data "icon0.png;." main.py >nul 2>&1
-if errorlevel 1 goto :fail
-
-call :progress "Cleaning temporary build files..."
-if exist build rmdir /s /q build >nul 2>&1
-if exist "%NAME%.spec" del /f /q "%NAME%.spec" >nul 2>&1
-
-call :progress "Finalizing..."
+set "EXE_NAME="
+for %%F in (target\release\*.exe) do (
+  copy /y "%%F" "%OUTDIR%\" >nul 2>&1
+  set "EXE_NAME=%%~nxF"
+)
+if not defined EXE_NAME goto :fail
 
 echo.
-echo BUILD OK  -^> %EXE_OUT%
+echo BUILD OK  -^> %OUTDIR%\%EXE_NAME%
 echo.
 
-timeout /t 3 /nobreak >nul
+%SystemRoot%\System32\timeout.exe /t 3 /nobreak >nul 2>&1
 exit /b 0
 
 :fail
@@ -68,17 +48,3 @@ echo BUILD FAILED
 echo.
 pause
 exit /b 1
-
-:progress
-set /a CURRENT_STEP+=1
-set /a "pct=CURRENT_STEP*100/TOTAL_STEPS"
-set /a "filled=CURRENT_STEP*BAR_WIDTH/TOTAL_STEPS"
-if !filled! gtr %BAR_WIDTH% set "filled=%BAR_WIDTH%"
-
-set "bar="
-for /L %%i in (1,1,%BAR_WIDTH%) do (
-    if %%i LEQ !filled! (set "bar=!bar!=") else (set "bar=!bar! ")
-)
-
-echo [!bar!] !pct!%%  %~1
-goto :eof
