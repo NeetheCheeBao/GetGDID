@@ -66,6 +66,7 @@ GetGDID
 |   Cargo.toml          # 项目清单与依赖
 |   LICENSE
 |   README.md
+|   version.ini         # 程序版本
 |
 +---assets
 |       icon.ico        # 图标
@@ -78,6 +79,7 @@ GetGDID
         consts.rs       # 常量定义
         gdid.rs         # 注册表读取与 LID 解析
         main.rs         # 程序入口与消息循环
+        version.rs      # 版本号解析
         win32.rs        # Win32 API 封装
 ```
 

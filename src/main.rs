@@ -3,6 +3,7 @@
 mod app;
 mod consts;
 mod gdid;
+mod version;
 mod win32;
 
 use std::ptr::{null, null_mut};
@@ -20,7 +21,7 @@ use windows_sys::Win32::UI::WindowsAndMessaging::{
 };
 
 use crate::app::{wndproc, App};
-use crate::consts::{APP_TITLE, ICON_BIG_INDEX, ICON_ICO, ICON_SMALL_INDEX, ID_EXIT, VK_ESCAPE};
+use crate::consts::{APP_NAME, ICON_BIG_INDEX, ICON_ICO, ICON_SMALL_INDEX, ID_EXIT, VK_ESCAPE};
 use crate::win32::{icon_from_ico, wide};
 
 fn main() {
@@ -60,7 +61,7 @@ fn main() {
         let pos_x = ((screen_w - win_w) / 2).max(0);
         let pos_y = ((screen_h - win_h) / 2).max(0);
 
-        let title = wide(APP_TITLE);
+        let title = wide(&format!("{}_{}", APP_NAME, version::load()));
         let hwnd = CreateWindowExW(
             0,
             class_name.as_ptr(),

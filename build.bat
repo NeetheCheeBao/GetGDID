@@ -22,7 +22,16 @@ set "OUTDIR=dist"
 
 cls
 
-if exist "%OUTDIR%" rmdir /s /q "%OUTDIR%" >nul 2>&1
+if exist "%OUTDIR%" (
+  rmdir /s /q "%OUTDIR%" >nul 2>&1
+  if exist "%OUTDIR%" (
+    echo ERROR: cannot clean "%OUTDIR%".
+    echo Close the running GetGDID.exe and run this script again.
+    echo.
+    pause
+    exit /b 1
+  )
+)
 mkdir "%OUTDIR%" 2>nul
 
 cargo build --release
@@ -30,7 +39,11 @@ if errorlevel 1 goto :fail
 
 set "EXE_NAME="
 for %%F in (target\release\*.exe) do (
-  copy /y "%%F" "%OUTDIR%\" >nul 2>&1
+  copy /y "%%F" "%OUTDIR%\%%~nxF" >nul 2>&1
+  if errorlevel 1 (
+    echo ERROR: failed to copy "%%F".
+    goto :fail
+  )
   set "EXE_NAME=%%~nxF"
 )
 if not defined EXE_NAME goto :fail

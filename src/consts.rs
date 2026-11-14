@@ -1,6 +1,7 @@
 use windows_sys::Win32::Foundation::COLORREF;
 
-pub(crate) const APP_TITLE: &str = "获取 GDID";
+pub(crate) const APP_NAME: &str = "GetGDID";
+pub(crate) const DEFAULT_VERSION: &str = "1.0.0";
 pub(crate) const HEADER_TEXT: &str = "全局设备标识符 (GDID)";
 pub(crate) const LABEL_HEX: &str = "原始十六进制 (LID)：";
 pub(crate) const LABEL_MS: &str = "Microsoft 格式：";
